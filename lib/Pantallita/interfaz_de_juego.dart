@@ -56,7 +56,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
       builder: (context) => AlertDialog(
         title: Text(gano ? 'Que crack eres sigue asi' : 'Mejora tu vocabulario mi pana 😔'),
         content: Text(
-            gano ? '¡Felicidades, adivinaste la palabra!' : 'La palabra era: ${juego.palabraCompleta}'),
+            gano ? '¡Felicidades, VAMOSS!' : 'La palabra era: ${juego.palabraCompleta}'),
         actions: [
           TextButton(
             onPressed: () {
@@ -101,17 +101,15 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
               style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, letterSpacing: 10),
             ),
 
-            // Separador visual
-            const Divider(),
 
-            // 3. Teclado Interactivo
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(), // Evita scroll innecesario
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7, // 7 letras por fila (adecuado para un teclado QWERTY visual)
+                  crossAxisCount: 5,
                   mainAxisSpacing: 6,
                   crossAxisSpacing: 6,
                   childAspectRatio: 1.0,
@@ -145,12 +143,12 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
             ),
 
             // Botón de Reiniciar
-           /// if (juego.haGanado || juego.haPerdido)
+            if (juego.haGanado || juego.haPerdido)
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ElevatedButton(
                   onPressed: _reiniciarJuego,
-           //       child: const Text('REINICIAR JUEGO', style: TextStyle(fontSize: 15)),
+                child: const Text('REINICIAR JUEGO', style: TextStyle(fontSize: 15)),
                 ),
               ),
           ],
