@@ -72,7 +72,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
 
   // PALABRAS DEL AHORCADO
   Widget letrasAhorcado() {
-    
+
     return Text(
       'Etapa: ${juego.intentosIncorrectos} de 7',
       style: TextStyle(fontSize: 18, color: juego.haPerdido ? Colors.red : Colors.black),
@@ -145,12 +145,12 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
             ),
 
             // Botón de Reiniciar
-            if (juego.haGanado || juego.haPerdido)
+           /// if (juego.haGanado || juego.haPerdido)
               Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.only(top: 20.0),
                 child: ElevatedButton(
                   onPressed: _reiniciarJuego,
-                  child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 27)),
+           //       child: const Text('REINICIAR JUEGO', style: TextStyle(fontSize: 15)),
                 ),
               ),
           ],
