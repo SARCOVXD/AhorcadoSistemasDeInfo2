@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Ahorcado',
       theme: ThemeData(
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
       ),
       home: const PantallaAhorcado(),
     );

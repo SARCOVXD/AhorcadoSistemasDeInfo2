@@ -72,8 +72,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
 
   // PALABRAS DEL AHORCADO
   Widget letrasAhorcado() {
-
-    // Por ahora, solo texto para simplificar
+    
     return Text(
       'Etapa: ${juego.intentosIncorrectos} de 7',
       style: TextStyle(fontSize: 18, color: juego.haPerdido ? Colors.red : Colors.black),
@@ -84,7 +83,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('El Ahorcado en Flutter')),
+      appBar: AppBar(title: const Text('El Ahorcado MICROPROYECTO 1')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -125,7 +124,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
                   bool esCorrecta = juego.palabraCompleta.contains(letra);
                   bool juegoTerminado = juego.haGanado || juego.haPerdido;
 
-                  Color colorBoton = Colors.blue;
+                  Color colorBoton = Colors.green;
                   if (fueIntentada) {
                     colorBoton = esCorrecta ? Colors.green.shade700 : Colors.red.shade700;
                   }
@@ -151,7 +150,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
                   onPressed: _reiniciarJuego,
-                  child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 18)),
+                  child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 27)),
                 ),
               ),
           ],
