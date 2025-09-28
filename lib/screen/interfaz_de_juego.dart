@@ -1,4 +1,4 @@
-import 'package:a/Logica/ahorcado.dart';
+import 'package:a/models/ahorcado.dart';
 import 'package:flutter/material.dart';
 
 

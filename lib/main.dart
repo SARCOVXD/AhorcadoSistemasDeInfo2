@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:a/Pantallita/interfaz_de_juego.dart';
+import 'package:a/screen/interfaz_de_juego.dart';
 
 void main() {
   runApp(const MyApp());
