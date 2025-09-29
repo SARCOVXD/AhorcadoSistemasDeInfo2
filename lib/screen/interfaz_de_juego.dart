@@ -109,7 +109,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(), // Evita scroll innecesario
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
+                  crossAxisCount: 9,
                   mainAxisSpacing: 6,
                   crossAxisSpacing: 6,
                   childAspectRatio: 1.0,
