@@ -1,5 +1,6 @@
 import 'package:a/models/ahorcado.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class DibujoAhorcado extends CustomPainter {
   final int intentosIncorrectos; // El número de errores que el juego pasa a este dibujante
 
@@ -7,7 +8,7 @@ class DibujoAhorcado extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Definimos el "lápiz" o "pincel" para dibujar
+
     var paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 5.0
@@ -29,7 +30,7 @@ class DibujoAhorcado extends CustomPainter {
       canvas.drawLine(Offset(size.width * 0.2, size.height * 0.1), Offset(size.width * 0.7, size.height * 0.1), paint);
     }
 
-    // Cuerda/soporte
+    // Cuerda
     if (intentosIncorrectos >= 3) {
       canvas.drawLine(Offset(size.width * 0.7, size.height * 0.1), Offset(size.width * 0.7, size.height * 0.2), paint);
     }
@@ -56,9 +57,8 @@ class DibujoAhorcado extends CustomPainter {
       canvas.drawLine(Offset(size.width * 0.7, size.height * 0.4), Offset(size.width * 0.8, size.height * 0.55), paint);
     }
 
-    // 8. Piernas (Dos líneas, esto significa que necesitamos más de 7 intentos,
-    // pero como solo tienes 7 intentos máximos, haremos que las dos piernas aparezcan
-    // en el último intento para mantener la proporción de 7 errores/8 partes).
+    // 8. Piernas
+
     if (intentosIncorrectos >= 7) {
       canvas.drawLine(Offset(size.width * 0.7, size.height * 0.65), Offset(size.width * 0.6, size.height * 0.8), paint);
       canvas.drawLine(Offset(size.width * 0.7, size.height * 0.65), Offset(size.width * 0.8, size.height * 0.8), paint);
@@ -82,15 +82,76 @@ class PantallaAhorcado extends StatefulWidget {
 class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
   final Ahorcado juego = Ahorcado();
 
+  int recordHistorico = 0;
+
   @override
   void initState() {
     super.initState();
-    juego.iniciarJuego(); // Inicia el juego al cargar la pantalla
+    juego.iniciarJuego();
+    cargarRecord(); //
+  }
+
+  // Función para cargar el récord guardado
+  void cargarRecord() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+
+      recordHistorico = prefs.getInt('record_ahorcado') ?? 0;
+    });
+  }
+
+  void guardarRecord(int puntajeActual) async {
+
+    if (puntajeActual > recordHistorico) {
+      final prefs = await SharedPreferences.getInstance();
+
+
+      await prefs.setInt('record_ahorcado', puntajeActual);
+
+
+      setState(() {
+        recordHistorico = puntajeActual;
+      });
+    }
+  }
+
+  void mostrarResultado(bool gano) {
+    String mensajeRecord = '';
+
+    if (gano) {
+      int puntajeActual = juego.intentosRestantes;
+
+
+      guardarRecord(puntajeActual);
+
+
+      if (puntajeActual == recordHistorico && recordHistorico > 0) {
+        mensajeRecord = '\n¡NUEVO RÉCORD: $puntajeActual intentos restantes!';
+      }
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(gano ? 'Que crack eres sigue asi' : 'Mejora tu vocabulario mi pana 😔'),
+        content: Text(
+            (gano ? '¡Felicidades, VAMOSS!' : 'La palabra era: ${juego.palabraCompleta}') + mensajeRecord),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _reiniciarJuego();
+            },
+            child: const Text('Jugar de Nuevo'),
+          ),
+        ],
+      ),
+    );
   }
 
 
-  // Manejador del evento de pulsar una letra
-  void _manejarIntento(String letra) {
+  void manejarIntento(String letra) {
     // Si el juego ha terminado, no hacer nada
     if (juego.haGanado || juego.haPerdido) return;
 
@@ -105,9 +166,9 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
 
       // Muestra un diálogo si el juego ha terminado después del intento
       if (juego.haGanado) {
-        _mostrarDialogoResultado(true);
+        mostrarResultado(true);
       } else if (juego.haPerdido) {
-        _mostrarDialogoResultado(false);
+        mostrarResultado(false);
       }
     }
   }
@@ -119,27 +180,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
     });
   }
 
-  // Muestra un diálogo de ganar o perder
-  void _mostrarDialogoResultado(bool gano) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // El usuario debe pulsar un botón para salir
-      builder: (context) => AlertDialog(
-        title: Text(gano ? 'Que crack eres sigue asi' : 'Mejora tu vocabulario mi pana 😔'),
-        content: Text(
-            gano ? '¡Felicidades, VAMOSS!' : 'La palabra era: ${juego.palabraCompleta}'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _reiniciarJuego();
-            },
-            child: const Text('Jugar de Nuevo'),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   // PALABRAS DEL AHORCADO
   Widget letrasAhorcado() {
@@ -159,8 +200,20 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            // 1. Contador de Intentos y Dibujo
+            // 1. DIBUJO Y RECORD
             dibujarAhorcado(),
+
+            // Nuevo Widget para el Récord Histórico
+            Text(
+              'Récord Histórico (Intentos Restantes): $recordHistorico', //
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange // Un color llamativo para el récord
+              ),
+            ),
+
+            // Texto de la Partida Actual
             Text(
               'Intentos Restantes: ${juego.intentosRestantes}',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
@@ -199,7 +252,7 @@ class _EstadoPantallaAhorcado extends State<PantallaAhorcado> {
                   }
 
                   return ElevatedButton(
-                    onPressed: (fueIntentada || juegoTerminado) ? null : () => _manejarIntento(letra),
+                    onPressed: (fueIntentada || juegoTerminado) ? null : () => manejarIntento(letra),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colorBoton,
                       padding: EdgeInsets.zero,
