@@ -47,7 +47,7 @@ class Ahorcado {
     }
   }
 
-  // --- PROPIEDADES (Getters) para acceder al estado ---
+
 
   // Muestra la palabra con guiones bajos o letras adivinadas
   String get palabraMostrada {
@@ -86,3 +86,6 @@ class Ahorcado {
   // Letras que ya han sido intentadas
   List<String> get letrasIntentadas => List.unmodifiable(_letrasIntentadas);
 }
+
+//DIBUJO :)
+
